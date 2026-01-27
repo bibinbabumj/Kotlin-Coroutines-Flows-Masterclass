@@ -10,95 +10,41 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.example.coroutinesmasterclass.ui.theme.CoroutinesMasterclassTheme
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.system.measureTimeMillis
+import java.nio.file.WatchEvent
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        ///1. FIRST VERSION (Two child coroutines + join)
-        /*  val job = lifecycleScope.launch {
-              val innerJob1 = launch {
-                  delay(2000L)
-                  println("InnerJob 1 finished")
-              }
-              val innerJob2 = launch {
-                  delay(1000L)
-                  println("InnerJob 2 finished")
-              }
-
-
-              ///What happens
-              //
-              //innerJob1 starts → delays 2000 ms.
-              //
-              //innerJob2 starts → delays 1000 ms.
-              //
-              //They run concurrently.
-              val timeMilleSeconds = measureTimeMillis {
-                  innerJob1.join()    // waits until innerJob1 completes (2 seconds)
-                  innerJob2.join()    // innerJob2 already completed earlier (1 second)
-
-              }
-
-              println("Jobs took : $timeMilleSeconds milliseconds")
-          }*/
-
-
-        //SECOND VERSION (Sequential delays)
-        /* val job2 = lifecycleScope.launch {
-
-             val timeMilleSeconds = measureTimeMillis {
-                 delay(2000L)
-                 println("InnerJob 1 finished")
-
-                 delay(1000L)
-                 println("InnerJob 2 finished")
-             }
-
-             println("Jobs took : $timeMilleSeconds milliseconds")
-         }*/
-
-
-        // Deferred
-        val jobDeferred = lifecycleScope.launch {
-
-            val profileDeferred = async {
-                println("Fetching profile data....")
-                delay(1000L)
-                "profile"
-            }
-
-            val postDeferred = async {
-                println("Fetching post data....")
+        val job = lifecycleScope.launch {
+            val innerJob1 = launch {
                 delay(2000L)
-                "post"
+                println("Innerjob 1 finished")
             }
-
-            val timeMilleSeconds = measureTimeMillis {
-                val profile = profileDeferred.await()
-                val post = postDeferred.await()
-
-                println("profile loaded: $profile, $post")
+            val innerJob2 = launch {
+                delay(1000L)
+                println("Innerjob 2 finished")
             }
-            println("Jobs took : $timeMilleSeconds milliseconds")
-        }
+            innerJob1.cancel()
+            delay(500L)
+            println("is inner job 2 stll active:${innerJob2.isActive}")
+            delay(600L)
+            println("is inner job 2 stll active:${innerJob2.isActive}")
+            println("is inner job 2 isCompleted:${innerJob2.isCompleted}")
+            println("is inner job 2 isCancelled:${innerJob2.isCancelled}")
 
+            setContent {
+                CoroutinesMasterclassTheme {
+                    Surface(modifier = Modifier.fillMaxSize()) {
+                        // CounterScreen()
+                    }
 
-        setContent {
-            CoroutinesMasterclassTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        text = "Hello "
-                    )
                 }
 
             }
-
         }
     }
 }
