@@ -92,7 +92,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             CoroutinesMasterclassTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    CounterScreen()
+                   //CounterScreen()
+                    ProfileScreen( )
                 }
 
             }
