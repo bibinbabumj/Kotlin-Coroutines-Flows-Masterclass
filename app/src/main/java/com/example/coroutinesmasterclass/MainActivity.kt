@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
 
 
         // Deferred
-        val jobDeferred = lifecycleScope.launch {
+       /* val jobDeferred = lifecycleScope.launch {
 
             val profileDeferred = async {
                 println("Fetching profile data....")
@@ -86,15 +86,13 @@ class MainActivity : ComponentActivity() {
                 println("profile loaded: $profile, $post")
             }
             println("Jobs took : $timeMilleSeconds milliseconds")
-        }
+        }*/
 
 
         setContent {
             CoroutinesMasterclassTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        text = "Hello "
-                    )
+                    CounterScreen()
                 }
 
             }
